@@ -1,0 +1,123 @@
+// ===============================================================
+// Assumed Data Model
+// ===============================================================
+//
+// Collection: contact_messages
+// Fields:
+//   - firstName: string (required)
+//   - lastName: string (required)
+//   - email: string (required, email format)
+//   - phone: string (optional)
+//   - interestedServices: list (optional)
+//   - message: string (required, max 5000 chars)
+//   - createdAt: timestamp (required)
+//
+// Collection: testimonials
+// Fields:
+//   - name: string (required)
+//   - text_fr: string (required)
+//   - text_en: string (required)
+//   - rating: number (required, 1-5)
+//   - createdAt: timestamp (required)
+//
+// Collection: blog_posts
+// Fields:
+//   - slug: string (required, unique)
+//   - title_fr: string (required)
+//   - title_en: string (required)
+//   - excerpt_fr: string (optional)
+//   - excerpt_en: string (optional)
+//   - content_fr: string (optional)
+//   - content_en: string (optional)
+//   - featured_image: string (optional, URL)
+//   - createdAt: timestamp (required)
+//
+// ===============================================================
+
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // ===============================================================
+    // Helper Functions
+    // ===============================================================
+
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isAuthenticated() &&
+        (get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role == 'admin' ||
+         (request.auth.token.email == "pankaj.purple@gmail.com" && request.auth.token.email_verified == true));
+    }
+
+    function isValidEmail(email) {
+      return email is string && email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$");
+    }
+
+    function isValidUrl(url) {
+      return url is string && (url.matches("^https://.*") || url.matches("^http://.*"));
+    }
+
+    // ===============================================================
+    // Domain Validators
+    // ===============================================================
+
+    function isValidContactMessage(data) {
+      return data.keys().hasAll(['firstName', 'lastName', 'email', 'message', 'createdAt']) &&
+             data.firstName is string && data.firstName.size() > 0 && data.firstName.size() < 100 &&
+             data.lastName is string && data.lastName.size() > 0 && data.lastName.size() < 100 &&
+             isValidEmail(data.email) &&
+             data.message is string && data.message.size() > 0 && data.message.size() < 5000 &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidTestimonial(data) {
+      return data.keys().hasAll(['name', 'text_fr', 'text_en', 'rating', 'createdAt']) &&
+             data.name is string && data.name.size() > 0 && data.name.size() < 100 &&
+             data.text_fr is string && data.text_fr.size() > 0 && data.text_fr.size() < 2000 &&
+             data.text_en is string && data.text_en.size() > 0 && data.text_en.size() < 2000 &&
+             data.rating is number && data.rating >= 1 && data.rating <= 5 &&
+             data.createdAt is timestamp;
+    }
+
+    function isValidBlogPost(data) {
+      return data.keys().hasAll(['slug', 'title_fr', 'title_en', 'createdAt']) &&
+             data.slug is string && data.slug.size() > 0 && data.slug.size() < 200 &&
+             data.title_fr is string && data.title_fr.size() > 0 && data.title_fr.size() < 200 &&
+             data.title_en is string && data.title_en.size() > 0 && data.title_en.size() < 200 &&
+             (!('featured_image' in data) || isValidUrl(data.featured_image)) &&
+             data.createdAt is timestamp;
+    }
+
+    // ===============================================================
+    // Rules
+    // ===============================================================
+
+    match /contact_messages/{messageId} {
+      allow create: if isValidContactMessage(request.resource.data);
+      allow read, update, delete: if isAdmin();
+    }
+
+    match /testimonials/{testimonialId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /blog_posts/{postId} {
+      allow read: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    match /users/{userId} {
+      allow read: if isAuthenticated() && (request.auth.uid == userId || isAdmin());
+      allow create, update: if isAdmin();
+    }
+
+    // Default deny
+    match /{document=**} {
+      allow read, write: if false;
+    }
+  }
+}

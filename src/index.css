@@ -1,0 +1,40 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;500;600;700&family=Nunito:wght@300;400;500;600;700&display=swap');
+
+@theme {
+  --font-serif: "Playfair Display", serif;
+  --font-sans: "Nunito", -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+  --color-navy-dark: #03045E;
+  --color-blue-dark: #023E8A;
+  --color-blue-medium: #0077B6;
+  --color-blue-bright: #0096C7;
+  --color-cyan-blue: #00B4D8;
+  --color-cyan-light: #48CAE4;
+  --color-cyan-lighter: #90E0EF;
+  --color-cyan-pale: #ADE8F4;
+  --color-cyan-very-pale: #CAF0F8;
+}
+
+@layer base {
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  body {
+    margin: 0;
+    font-family: var(--font-sans);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    background-color: #FFFFFF;
+    color: #03045E;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}

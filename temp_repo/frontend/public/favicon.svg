@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <circle cx="256" cy="256" r="256" fill="#03045E"/>
+
+  <!-- Petal 1: leftmost, narrow, dark teal — tilted ~50° left -->
+  <path d="M0,-95 Q-16,0 0,95 Q16,0 0,-95Z" fill="#0077B6"
+    transform="translate(220,365) rotate(-50) translate(0,-100)"/>
+
+  <!-- Petal 2: second, medium width — tilted ~22° left -->
+  <path d="M0,-110 Q-20,0 0,110 Q20,0 0,-110Z" fill="#0096C7"
+    transform="translate(220,365) rotate(-20) translate(0,-115)"/>
+
+  <!-- Petal 3: third, wider, lighter teal — tilted ~10° right -->
+  <path d="M0,-120 Q-24,0 0,120 Q24,0 0,-120Z" fill="#48CAE4"
+    transform="translate(220,365) rotate(10) translate(0,-125)"/>
+
+  <!-- Petal 4: wide horizontal leaf, lightest cyan — tilted ~62° right -->
+  <path d="M0,-85 Q-40,0 0,85 Q40,0 0,-85Z" fill="#90E0EF"
+    transform="translate(220,365) rotate(62) translate(0,-92)"/>
+
+  <!-- Coral oval dot at base -->
+  <ellipse cx="220" cy="388" rx="19" ry="24" fill="#F4845F"/>
+</svg>

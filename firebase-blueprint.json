@@ -1,0 +1,63 @@
+{
+  "entities": {
+    "ContactMessage": {
+      "title": "Contact Message",
+      "description": "A message sent via the contact form",
+      "type": "object",
+      "properties": {
+        "firstName": { "type": "string" },
+        "lastName": { "type": "string" },
+        "email": { "type": "string", "format": "email" },
+        "phone": { "type": "string" },
+        "interestedServices": { "type": "array", "items": { "type": "string" } },
+        "message": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["firstName", "lastName", "email", "message", "createdAt"]
+    },
+    "Testimonial": {
+      "title": "Testimonial",
+      "description": "A client testimonial",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "text_fr": { "type": "string" },
+        "text_en": { "type": "string" },
+        "rating": { "type": "number" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["name", "text_fr", "text_en", "rating", "createdAt"]
+    },
+    "BlogPost": {
+      "title": "Blog Post",
+      "description": "A post on the blog",
+      "type": "object",
+      "properties": {
+        "slug": { "type": "string" },
+        "title_fr": { "type": "string" },
+        "title_en": { "type": "string" },
+        "excerpt_fr": { "type": "string" },
+        "excerpt_en": { "type": "string" },
+        "content_fr": { "type": "string" },
+        "content_en": { "type": "string" },
+        "featured_image": { "type": "string" },
+        "createdAt": { "type": "string", "format": "date-time" }
+      },
+      "required": ["slug", "title_fr", "title_en", "createdAt"]
+    }
+  },
+  "firestore": {
+    "/contact_messages/{messageId}": {
+      "schema": "ContactMessage",
+      "description": "Collection of contact form submissions"
+    },
+    "/testimonials/{testimonialId}": {
+      "schema": "Testimonial",
+      "description": "Collection of client testimonials"
+    },
+    "/blog_posts/{postId}": {
+      "schema": "BlogPost",
+      "description": "Collection of blog posts"
+    }
+  }
+}
